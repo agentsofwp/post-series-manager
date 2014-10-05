@@ -87,15 +87,16 @@ class Post_Series_Manager {
 		if ( $all_series ) {
 			foreach( $all_series as $series ) {
 				$prev = get_previous_post_link('%link', '%title', true, None, 'post-series' );
-				$series_block = '<div class="post-series-manager-block"><p>This post is part of the series %s</p>';
+				$series_text = __('This post is part of the series');
+				$series_block = '<div class="post-series-manager-block"><p>%s %s</p>';
 				$series_link = sprintf('<a href="%s">%s</a>', get_term_link($series), $series->name);
 
-				if ( $prev ) {
-					$series_block .= '<p>Read the previous post in this series:<br /> %s</p></div>';
+				if ( $prev && is_single() ) {
+					$series_previous_text = __('Read the previous post in ths series:');
+					$series_block .= '<p>%s<br /> %s</p></div>';
 				}
-
 				
-				$shortcode_html .= sprintf($series_block, $series_link, $prev);
+				$shortcode_html .= sprintf($series_block, $series_text, $series_link, $series_previous_text, $prev);
 			}
 		}
 		return $shortcode_html;
@@ -108,11 +109,12 @@ class Post_Series_Manager {
 		$all_series = get_the_terms( $post->ID, 'post-series' );
 
 		if ( $all_series ) {
-			$series_nav = '<div class="post-series-nav"><p>Continue reading this series:<br /> %s</p></div>';
+			$series_text = __('Continue reading this series:');
+			$series_nav = '<div class="post-series-nav"><p>%s<br /> %s</p></div>';
 			$next = get_next_post_link('%link', '%title', true, None, 'post-series' );
 
-			if ($next) {
-				$shortcode_html = sprintf($series_nav, $next);
+			if ( $next && is_single() ) {
+				$shortcode_html = sprintf($series_nav, $series_text, $next);
 			}
 		}
 
@@ -121,8 +123,8 @@ class Post_Series_Manager {
 	}
 
 	// Automatically add shortcodes to post content
-	public function post_series_init( $content ) {
-        if( is_singular() ) {
+	public function post_series_content( $content ) {
+        if( is_single() ) {
             $series_box = do_shortcode("[post_series_block]");
             $series_nav = do_shortcode("[post_series_nav]");
             $content = $series_box . $content . $series_nav;
