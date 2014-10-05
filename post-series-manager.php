@@ -1,12 +1,6 @@
 <?php
 
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * Dashboard. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
  *
  * @link              http://cheffism.com
  * @since             1.0.0
@@ -15,14 +9,30 @@
  * @wordpress-plugin
  * Plugin Name:       Post Series Manager
  * Plugin URI:        http://cheffism.com/post-series-manager/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress dashboard.
+ * Description:       This plugin will help you manage and display post series more easily. You'll be able to create/assign series and display other posts in the series.
  * Version:           1.0.0
- * Author:            Jeffrey de Wit, Adam Soucie
- * Author URI:        http://cheffism.com/
+ * Author:            Jeffrey de Wit, Adam Soucie, Highforge
+ * Author URI:        http://highforge.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       post-series-manager
  * Domain Path:       /languages
+ *
+ *
+ * Copyright 2014  Jeffrey de Wit (email : jeff@highforge.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as 
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 // If this file is called directly, abort.
