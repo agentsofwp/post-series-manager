@@ -17,7 +17,7 @@
  * Plugin URI:        http://cheffism.com/post-series-manager/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress dashboard.
  * Version:           1.0.0
- * Author:            Jeffrey de Wit
+ * Author:            Jeffrey de Wit, Adam Soucie
  * Author URI:        http://cheffism.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -30,41 +30,63 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * The code that runs during plugin activation.
- */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-post-series-manager-activator.php';
+class Post_Series_Manager {
 
-/**
- * The code that runs during plugin deactivation.
- */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-post-series-manager-deactivator.php';
+	function __construct() {
+		add_action( 'init', array( &$this, 'post_series_taxonomy' ) );
+		add_action( 'plugins_loaded', array( &$this, 'post_series_i18n' ) );
+		add_action( 'init', array( &$this, 'post_series_shortcodes' ) );
+		add_filter( 'the_content', array( &$this, 'post_series_init' ) );
+	}
 
-/** This action is documented in includes/class-post-series-manager-activator.php */
-register_activation_hook( __FILE__, array( 'Post_Series_Manager_Activator', 'activate' ) );
+	public function post_series_taxonomy() {
+		// create a new taxonomy
+		register_taxonomy(
+			'post-series',
+			'post',
+			array(
+				'label' => __( 'Post Series' ),
+				'rewrite' => array( 'slug' => 'post-series' ),
+			)
+		);
+	}
 
-/** This action is documented in includes/class-post-series-manager-deactivator.php */
-register_deactivation_hook( __FILE__, array( 'Post_Series_Manager_Deactivator', 'deactivate' ) );
+	public function post_series_i18n() {
+		load_plugin_textdomain(
+			'post-series-manager',
+			false,
+			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+		);
+	}
 
-/**
- * The core plugin class that is used to define internationalization,
- * dashboard-specific hooks, and public-facing site hooks.
- */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-post-series-manager.php';
+	public function post_series_shortcodes() {
+		add_shortcode('post_series_manager', array( &$this, 'post_series_manager_function') );
+	}
 
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
- */
-function run_Post_Series_Manager() {
+	public function post_series_manager_function() {
+		global $post;
 
-	$plugin = new Post_Series_Manager();
-	$plugin->run();
+		$shortcode_html = NULL;
+		$series = get_the_terms( $post->ID, 'post-series' );
 
+		if ( $series ) {
+			var_dump($series);
+			$series_block = '<div class="post-series-manager-block"><p>This post is part of a series: %s</p></div>';
+			$series_link = '<a href="">'; 
+
+		}
+
+		return $shortcode_html;
+	}
+
+	public function post_series_init( $content ) {
+        if( is_singular() ) {
+            $html = do_shortcode("[post_series_manager]");
+            $content = $content . $html;
+        }
+        
+        return $content;
+	}
 }
-run_Post_Series_Manager();
+
+new Post_Series_Manager;
