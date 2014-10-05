@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Post Series Manager ===
 Contributors: adamsoucie, cheffheid, highforge
 Donate link: http://cheffism.com/
 Tags: post
