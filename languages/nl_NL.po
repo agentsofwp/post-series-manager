@@ -1,0 +1,31 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Post Series Manager\n"
+"POT-Creation-Date: 2014-10-05 00:52-0500\n"
+"PO-Revision-Date: 2014-10-05 00:53-0500\n"
+"Last-Translator: \n"
+"Language-Team: Highforge <devteam@highforge.com>\n"
+"Language: Dutch\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../post-series-manager.php:71
+msgid "Post Series"
+msgstr "Post serie"
+
+#: ../post-series-manager.php:100
+msgid "This post is part of the series"
+msgstr "Deze post behoort tot de reeks"
+
+#: ../post-series-manager.php:105
+msgid "Read the previous post in ths series:"
+msgstr "Lees de vorige post in deze reeks:"
+
+#: ../post-series-manager.php:122
+msgid "Continue reading this series:"
+msgstr "Lees verder in deze reeks:"
