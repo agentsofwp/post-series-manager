@@ -33,14 +33,27 @@ if ( ! defined( 'WPINC' ) ) {
 class Post_Series_Manager {
 
 	function __construct() {
+		register_activation_hook( __FILE__, array( &$this, 'post_series_manager_activate' ) );
+		register_deactivation_hook( __FILE__, array( &$this, 'post_series_manager_deactivate' ) );
 		add_action( 'init', array( &$this, 'post_series_taxonomy' ) );
 		add_action( 'plugins_loaded', array( &$this, 'post_series_i18n' ) );
 		add_action( 'init', array( &$this, 'post_series_shortcodes' ) );
 		add_filter( 'the_content', array( &$this, 'post_series_init' ) );
 	}
 
+	// register taxonomy and force rewrite flush when plugin is activated
+	function post_series_manager_activate() {
+		$this->post_series_taxonomy();
+		flush_rewrite_rules();
+	}
+
+	// force rewrite flush when plugin is deactivated
+	function post_series_manager_deactivate() {
+		flush_rewrite_rules();
+	}
+
+
 	public function post_series_taxonomy() {
-		// create a new taxonomy
 		register_taxonomy(
 			'post-series',
 			'post',
@@ -63,26 +76,29 @@ class Post_Series_Manager {
 		add_shortcode('post_series_manager', array( &$this, 'post_series_manager_function') );
 	}
 
+	// post_series_manager shortcode output
 	public function post_series_manager_function() {
 		global $post;
 
 		$shortcode_html = NULL;
-		$series = get_the_terms( $post->ID, 'post-series' );
+		$all_series = get_the_terms( $post->ID, 'post-series' );
 
-		if ( $series ) {
-			var_dump($series);
-			$series_block = '<div class="post-series-manager-block"><p>This post is part of a series: %s</p></div>';
-			$series_link = '<a href="">'; 
+		if ( $all_series ) {
+			foreach( $all_series as $series ) {
+				$series_block = '<div class="post-series-manager-block"><p>This post is part of a series: %s</p></div>';
+				$series_link = sprintf('<a href="%s">%s</a>', get_term_link($series), $series->name);
 
+				$shortcode_html .= sprintf($series_block, $series_link);
+			}
 		}
-
 		return $shortcode_html;
 	}
 
+	// Automatically add shortcodes to post content
 	public function post_series_init( $content ) {
         if( is_singular() ) {
-            $html = do_shortcode("[post_series_manager]");
-            $content = $content . $html;
+            $series_box = do_shortcode("[post_series_manager]");
+            $content = $series_box . $content;
         }
         
         return $content;
