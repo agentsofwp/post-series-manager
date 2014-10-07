@@ -48,7 +48,7 @@ class Post_Series_Manager {
 		add_action( 'init', array( &$this, 'post_series_taxonomy' ) );
 		add_action( 'plugins_loaded', array( &$this, 'post_series_i18n' ) );
 		add_action( 'init', array( &$this, 'post_series_shortcodes' ) );
-		add_filter( 'the_content', array( &$this, 'post_series_init' ) );
+		add_filter( 'the_content', array( &$this, 'post_series_content' ) );
 	}
 
 	// register taxonomy and force rewrite flush when plugin is activated
