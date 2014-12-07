@@ -49,6 +49,7 @@ class Post_Series_Manager {
 		add_action( 'plugins_loaded', array( &$this, 'post_series_i18n' ) );
 		add_action( 'init', array( &$this, 'post_series_shortcodes' ) );
 		add_filter( 'the_content', array( &$this, 'post_series_content' ) );
+		add_action( 'pre_get_posts', array( &$this, 'post_series_sort_order' ) );
 	}
 
 	// register taxonomy and force rewrite flush when plugin is activated
@@ -141,6 +142,13 @@ class Post_Series_Manager {
         }
         
         return $content;
+	}
+
+	// Reverse sort order, since part 1 is generally older than part X
+	public function post_series_sort_order( $query ) {
+    	if( ( $query->is_main_query() ) && ( is_tax('post-series') ) ) {
+            $query->set( 'order', 'ASC' );
+    	}
 	}
 }
 
