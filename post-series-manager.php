@@ -71,6 +71,20 @@ class Post_Series_Manager {
 			array(
 				'label' => __( 'Post Series' ),
 				'rewrite' => array( 'slug' => 'post-series' ),
+				'labels' => array( 'name' => __( 'Post Series' ),
+									'singular_name' => __( 'Post Series' ),
+									'all_items' => __( 'All Post Series' ),
+									'edit_item' => __( 'Edit Post Series' ),
+									'view_item' => __( 'View Post Series' ),
+									'update_item' => __( 'Update Post Series' ),
+									'add_new_item' => __( 'Add New Post Series' ), 
+									'new_item_name' => __( 'New Post Series Name' ),
+									'search_items' => __( 'Search Post Series' ),
+									'popular_items' => __( 'Popular Post Series' ),
+									'separate_items_with_commas' => __( 'Separate post series with commas' ),
+									'add_or_remove_items' => __( 'Add or remove post series' ),
+									'choose_from_most_used' => __( 'Choose from most used post series' ),
+									'not_found' => __( 'No post series found' ) )
 			)
 		);
 	}
