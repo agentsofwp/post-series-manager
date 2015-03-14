@@ -139,6 +139,7 @@ class Post_Series_Manager {
 	 */
 	public function get_series_list_HTML( $series )
 	{
+		$current_post_id = get_the_ID();
 		$series_list_HTML = '<p>Other posts in this series:</p><ul class="post-series-manager-post-list">';
 
 		$args = array(
@@ -159,9 +160,15 @@ class Post_Series_Manager {
 			$post_title 	= get_the_title( $series_post->ID );
 			$post_permalink	= get_permalink( $series_post->ID );
 
-			$series_list_HTML .= "<li class='post-series-manager-post'>";
-				$series_list_HTML .= "<a href='$post_permalink' target='_blank'>" . $post_title . "</a>";
-			$series_list_HTML .= "</li>";
+			$list_item = "<li class='post-series-manager-post'>%s</li>";
+
+			if ( $series_post->ID === $current_post_id ) {
+				$title_markup = $post_title . __(' (Current)');
+			} else {
+				$title_markup = "<a href='$post_permalink'>" . $post_title . "</a>";
+			}
+
+			$series_list_HTML .= sprintf($list_item, $title_markup);
 		}
 
 		$series_list_HTML .= '</ul>';
