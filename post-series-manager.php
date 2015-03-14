@@ -177,7 +177,7 @@ class Post_Series_Manager {
 		if ( $all_series ) {
 			$series_text = __('Continue reading this series:');
 			$series_nav = '<div class="post-series-nav"><p>%s<br /> %s</p></div>';
-			$next = get_next_post_link('%link', '%title', true, None, 'post-series' );
+			$next = get_next_post_link('%link', '%title', true, NULL, 'post-series' );
 
 			if ( $next && is_single() ) {
 				$shortcode_html = sprintf($series_nav, $series_text, $next);
