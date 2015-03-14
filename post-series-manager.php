@@ -148,7 +148,8 @@ class Post_Series_Manager {
 					'field' => 'slug',
 					'terms' => $series->name
 				)
-			)
+			),
+			'order' => 'ASC'
 		);
 
 		$series_posts = get_posts( $args );
