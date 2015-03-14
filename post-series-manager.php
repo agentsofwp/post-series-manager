@@ -49,6 +49,7 @@ class Post_Series_Manager {
 		add_action( 'plugins_loaded', array( &$this, 'post_series_i18n' ) );
 		add_action( 'init', array( &$this, 'post_series_shortcodes' ) );
 		add_filter( 'the_content', array( &$this, 'post_series_content' ) );
+		add_action( 'pre_get_posts', array( &$this, 'post_series_sort_order' ) );
 	}
 
 	// register taxonomy and force rewrite flush when plugin is activated
@@ -70,6 +71,20 @@ class Post_Series_Manager {
 			array(
 				'label' => __( 'Post Series' ),
 				'rewrite' => array( 'slug' => 'post-series' ),
+				'labels' => array( 'name' => __( 'Post Series' ),
+									'singular_name' => __( 'Post Series' ),
+									'all_items' => __( 'All Post Series' ),
+									'edit_item' => __( 'Edit Post Series' ),
+									'view_item' => __( 'View Post Series' ),
+									'update_item' => __( 'Update Post Series' ),
+									'add_new_item' => __( 'Add New Post Series' ), 
+									'new_item_name' => __( 'New Post Series Name' ),
+									'search_items' => __( 'Search Post Series' ),
+									'popular_items' => __( 'Popular Post Series' ),
+									'separate_items_with_commas' => __( 'Separate post series with commas' ),
+									'add_or_remove_items' => __( 'Add or remove post series' ),
+									'choose_from_most_used' => __( 'Choose from most used post series' ),
+									'not_found' => __( 'No post series found' ) )
 			)
 		);
 	}
@@ -96,20 +111,61 @@ class Post_Series_Manager {
 
 		if ( $all_series ) {
 			foreach( $all_series as $series ) {
-				$prev = get_previous_post_link('%link', '%title', true, None, 'post-series' );
 				$series_text = __('This post is part of the series');
-				$series_block = '<div class="post-series-manager-block"><p>%s %s</p>';
+				$series_block = '<div class="post-series-manager-block"><p>%s %s</p>%s';
 				$series_link = sprintf('<a href="%s">%s</a>', get_term_link($series), $series->name);
 
-				if ( $prev && is_single() ) {
-					$series_previous_text = __('Read the previous post in ths series:');
-					$series_block .= '<p>%s<br /> %s</p></div>';
+				if( is_single() )
+				{
+					$series_list_HTML = $this->get_series_list_HTML( $series );
+					$shortcode_html .= sprintf($series_block, $series_text, $series_link, $series_list_HTML);
 				}
-				
-				$shortcode_html .= sprintf($series_block, $series_text, $series_link, $series_previous_text, $prev);
+				else
+				{
+					$shortcode_html .= sprintf($series_block, $series_text, $series_link);
+				}
 			}
 		}
 		return $shortcode_html;
+	}
+
+	/**
+	 * Generates the markup for the Post Series list.
+	 *
+	 * @since  1.0.0
+	 * 
+	 * @param  object $series The post series to work through
+	 * @return string $series_list_HTML Completed HTML string of all the series lists
+	 */
+	public function get_series_list_HTML( $series )
+	{
+		$series_list_HTML = '<p>Other posts in this series:</p><ul class="post-series-manager-post-list">';
+
+		$args = array(
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'post-series',
+					'field' => 'slug',
+					'terms' => $series->name
+				)
+			)
+		);
+
+		$series_posts = get_posts( $args );
+
+		foreach ($series_posts as $series_post ) 
+		{
+			$post_title 	= get_the_title( $series_post->ID );
+			$post_permalink	= get_permalink( $series_post->ID );
+
+			$series_list_HTML .= "<li class='post-series-manager-post'>";
+				$series_list_HTML .= "<a href='$post_permalink' target='_blank'>" . $post_title . "</a>";
+			$series_list_HTML .= "</li>";
+		}
+
+		$series_list_HTML .= '</ul>';
+
+		return $series_list_HTML;
 	}
 
 	public function post_series_nav_function() {
@@ -141,6 +197,13 @@ class Post_Series_Manager {
         }
         
         return $content;
+	}
+
+	// Reverse sort order, since part 1 is generally older than part X
+	public function post_series_sort_order( $query ) {
+    	if( ( $query->is_main_query() ) && ( is_tax('post-series') ) ) {
+            $query->set( 'order', 'ASC' );
+    	}
 	}
 }
 
