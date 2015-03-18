@@ -11,15 +11,14 @@
  * Plugin URI:        http://cheffism.com/post-series-manager/
  * Description:       This plugin will help you manage and display post series more easily. You'll be able to create/assign series and display other posts in the series.
  * Version:           1.0.0
- * Author:            Jeffrey de Wit, Adam Soucie, Highforge
- * Author URI:        http://highforge.com/
+ * Author:            Jeffrey de Wit, Adam Soucie
+ * Author URI:        http://cheffism.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       post-series-manager
  * Domain Path:       /languages
  *
  *
- * Copyright 2014  Jeffrey de Wit (email : jeff@highforge.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as 

@@ -1,6 +1,5 @@
 === Post Series Manager ===
-Contributors: adamsoucie, cheffheid, highforge
-Donate link: http://cheffism.com/
+Contributors: adamsoucie, cheffheid
 Tags: post
 Requires at least: 3.8
 Tested up to: 4.0
@@ -19,7 +18,7 @@ It consists of a custom taxonomy (`post-series`) and two shortcodes `[post_serie
 
 1. Upload the `post-series-manager` folder to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Start adding series tags to your posts
+1. Start adding series tags to your posts like you would a category
 
 == Frequently Asked Questions ==
 
