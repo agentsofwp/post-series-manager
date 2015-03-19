@@ -47,7 +47,8 @@ class Post_Series_Manager {
 		add_action( 'init', array( &$this, 'post_series_taxonomy' ) );
 		add_action( 'plugins_loaded', array( &$this, 'post_series_i18n' ) );
 		add_action( 'init', array( &$this, 'post_series_shortcodes' ) );
-		add_filter( 'the_content', array( &$this, 'post_series_content' ) );
+		add_filter( 'the_content', array( &$this, 'post_series_before' ) );
+		add_filter( 'the_content', array( &$this, 'post_series_after' ) );
 		add_action( 'pre_get_posts', array( &$this, 'post_series_sort_order' ) );
 	}
 
@@ -195,14 +196,22 @@ class Post_Series_Manager {
 
 	}
 
-	// Automatically add shortcodes to post content
-	public function post_series_content( $content ) {
+	// Automatically add shortcodes to post content, before and after the post content
+	public function post_series_before( $content ) {
         if( is_single() ) {
             $series_box = do_shortcode("[post_series_block]");
-            $series_nav = do_shortcode("[post_series_nav]");
-            $content = $series_box . $content . $series_nav;
+            $content = $series_box . $content;
         }
         
+        return $content;
+	}
+
+	public function post_series_after( $content ) {
+		if( is_single() ) {
+			$series_nav = do_shortcode("[post_series_nav]");
+        	$content = $content . $series_nav;
+		}
+
         return $content;
 	}
 
@@ -214,4 +223,4 @@ class Post_Series_Manager {
 	}
 }
 
-new Post_Series_Manager;
+$post_series_manager = new Post_Series_Manager();
