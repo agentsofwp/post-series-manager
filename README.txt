@@ -15,6 +15,8 @@ This plugin will help you manage and display post series more easily. You'll be 
 
 It consists of a custom taxonomy (`post-series`) and two shortcodes `[post_series_block]` and `[post_series_nav]`.
 
+It will automatically display a list of posts in the series at the top of a post and a link to the next post in the series when applicable.
+
 == Installation ==
 
 1. Upload the `post-series-manager` folder to the `/wp-content/plugins/` directory
