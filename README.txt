@@ -18,12 +18,26 @@ It consists of a custom taxonomy (`post-series`) and two shortcodes `[post_serie
 == Installation ==
 
 1. Upload the `post-series-manager` folder to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Start adding series tags to your posts like you would a regular tag
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Start adding series tags to your posts like you would a regular tag
 
 == Frequently Asked Questions ==
 
-Nothing here yet.
+= I don't want it to show up before/after/somewhere else, what do I do? =
+
+The plugin is set up in such a way that the content filters that are put in place can be removed fairly simply.
+
+    // Remove the shortcode that's automatically added before the content
+    remove_filter( 'the_content', array( $post_series_manager, 'post_series_before' ) );
+    // Remove the shortcode that's automatically added after the content
+    remove_filter( 'the_content', array( $post_series_manager, 'post_series_after' ) );
+
+= How do I use the shortcodes? =
+
+The shortcodes are simple and have no additional parameters to use. The shortcodes that are available are:
+
+* [post_series_block] - this is normally added before the content
+* [post_series_nav] - this is normally added after the content
 
 == Screenshots ==
 
