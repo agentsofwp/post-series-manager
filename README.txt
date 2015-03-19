@@ -25,7 +25,7 @@ It consists of a custom taxonomy (`post-series`) and two shortcodes `[post_serie
 
 = I don't want it to show up before/after/somewhere else, what do I do? =
 
-The plugin is set up in such a way that the content filters that are put in place can be removed fairly simply.
+The plugin is set up in such a way that the content filters that are put in place can be removed fairly simply. Add one, or both, of the following to your functions.php:
 
     // Remove the shortcode that's automatically added before the content
     remove_filter( 'the_content', array( $post_series_manager, 'post_series_before' ) );
