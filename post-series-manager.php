@@ -140,7 +140,7 @@ class Post_Series_Manager {
     public function get_series_list_HTML( $series )
     {
         $current_post_id = get_the_ID();
-        $series_list_HTML = '<p>Other posts in this series:</p><ul class="post-series-manager-post-list">';
+        $series_list_HTML = '<p>' . __('Other posts in this series:') . '</p><ul class="post-series-manager-post-list">';
 
         $args = array(
             'tax_query' => array(
