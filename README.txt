@@ -46,6 +46,7 @@ The shortcodes are simple and have no additional parameters to use. The shortcod
 A number of filters have been included, and more are to follow.
 
 The filters that are included (subject to change):
+
     // Filters "This post of part of the series: " text
     post-series-manager-series-text
 
