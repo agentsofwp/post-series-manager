@@ -10,7 +10,7 @@
 * Plugin Name:       Post Series Manager
 * Plugin URI:        http://cheffism.com/post-series-manager/
 * Description:       This plugin will help you manage and display post series more easily. You'll be able to create/assign series and display other posts in the series.
-* Version:           1.0.2
+* Version:           1.1
 * Author:            Jeffrey de Wit, Adam Soucie
 * Author URI:        http://cheffism.com/
 * License:           GPL-2.0+
