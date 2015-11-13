@@ -147,6 +147,7 @@ class Post_Series_Manager {
 
         apply_filters( 'post-series-manager-current-text', $current_indicator );
 
+        $series_list_HTML = '<p>' . __('Other posts in this series:') . '</p><ol class="post-series-manager-post-list">';
 
         $args = array(
             'tax_query' => array(
@@ -164,8 +165,6 @@ class Post_Series_Manager {
 
         $current_post = get_post( $current_post_ID );
         $current_index = array_search( $current_post, $series_posts );
-
-        $series_list_HTML .= '<p>' . __('Other posts in this series:') . '</p><ol class="post-series-manager-post-list">';
 
         $start_index = $current_index - 2;
         $end_index = $current_index + 2;
