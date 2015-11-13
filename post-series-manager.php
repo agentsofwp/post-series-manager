@@ -106,7 +106,7 @@ class Post_Series_Manager {
     public function post_series_block_function() {
         global $post;
 
-        $shortcode_html = NULL;
+        $shortcode_HTML = NULL;
         $all_series = get_the_terms( $post->ID, 'post-series' );
 
         if ( $all_series ) {
@@ -120,15 +120,15 @@ class Post_Series_Manager {
                if( is_single() )
                {
                   $series_list_HTML = $this->get_series_list_HTML( $series );
-                  $shortcode_html .= sprintf($series_block, $series_text, $series_link, $series_list_HTML);
+                  $shortcode_HTML .= sprintf($series_block, $series_text, $series_link, $series_list_HTML);
               }
               else
               {
-                  $shortcode_html .= sprintf($series_block, $series_text, $series_link);
+                  $shortcode_HTML .= sprintf($series_block, $series_text, $series_link);
               }
           }
       }
-      return $shortcode_html;
+      return $shortcode_HTML;
     }
 
     /**
@@ -141,12 +141,12 @@ class Post_Series_Manager {
     */
     public function get_series_list_HTML( $series )
     {
-        $current_post_id = get_the_ID();
+        $current_post_ID = get_the_ID();
+
         $current_indicator = __(' (Current)');
 
         apply_filters( 'post-series-manager-current-text', $current_indicator );
 
-        $series_list_HTML = '<p>' . __('Other posts in this series:') . '</p><ol class="post-series-manager-post-list">';
 
         $args = array(
             'tax_query' => array(
@@ -156,29 +156,45 @@ class Post_Series_Manager {
                   'terms' => $series->name
                   )
                ),
-            'order' => 'ASC'
+            'order' => 'ASC',
+            'posts_per_page' => -1,
             );
 
         $series_posts = get_posts( $args );
 
-        foreach ($series_posts as $series_post ) 
-        {
-            $post_title 	= get_the_title( $series_post->ID );
-            $post_permalink	= get_permalink( $series_post->ID );
+        $current_post = get_post( $current_post_ID );
+        $current_index = array_search( $current_post, $series_posts );
 
+        $series_list_HTML .= '<p>' . __('Other posts in this series:') . '</p><ol class="post-series-manager-post-list">';
+
+        $start_index = $current_index - 2;
+        $end_index = $current_index + 2;
+
+        if( $start_index < 0 )
+        {
+          $start_index = 0;
+        }
+
+        if( $end_index > ( count( $series_posts ) - 1) )
+        {
+          $end_index = count( $series_posts ) - 1;
+        }
+
+        for($i = $start_index; $i <= $end_index; $i++ )
+        {
+            $post_title   = get_the_title( $series_posts[$i]->ID );
+            $post_permalink = get_permalink( $series_posts[$i]->ID );
 
             $list_item = "<li class='post-series-manager-post'>%s</li>";
 
-            if ( $series_post->ID === $current_post_id ) {
+            if ( $series_posts[$i]->ID === $current_post_ID ) {
                $title_markup = $post_title . $current_indicator;
            } else {
                $title_markup = "<a href='$post_permalink'>" . $post_title . "</a>";
            }
 
-
-
            $series_list_HTML .= sprintf($list_item, $title_markup);
-       }
+        }
 
        $series_list_HTML .= '</ol>';
 
@@ -188,7 +204,7 @@ class Post_Series_Manager {
     public function post_series_nav_function() {
         global $post;
 
-        $shortcode_html = NULL;
+        $shortcode_HTML = NULL;
         $all_series = get_the_terms( $post->ID, 'post-series' );
 
         if ( $all_series ) {
@@ -199,11 +215,11 @@ class Post_Series_Manager {
             apply_filters( 'post-series-manager-next-text', $series_text );
 
             if ( $next && is_single() ) {
-               $shortcode_html = sprintf($series_nav, $series_text, $next);
+               $shortcode_HTML = sprintf($series_nav, $series_text, $next);
            }
        }
 
-       return $shortcode_html;
+       return $shortcode_HTML;
 
     }
 
