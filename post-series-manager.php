@@ -98,8 +98,8 @@ class Post_Series_Manager {
     }
 
     public function post_series_shortcodes() {
-        add_shortcode('post_series_block', array( &$this, 'post_series_block_function') );
-        add_shortcode('post_series_nav', array( &$this, 'post_series_nav_function') );
+        add_shortcode( 'post_series_block', array( &$this, 'post_series_block_function' ) );
+        add_shortcode( 'post_series_nav', array( &$this, 'post_series_nav_function' ) );
     }
 
     // post_series_manager shortcode output
@@ -111,20 +111,20 @@ class Post_Series_Manager {
 
         if ( $all_series ) {
             foreach( $all_series as $series ) {
-               $series_text = __('This post is part of the series');
+               $series_text = __( 'This post is part of the series' );
                $series_block = '<div class="post-series-manager-block"><p>%s %s</p>%s</div>';
-               $series_link = sprintf('<a href="%s">%s</a>', get_term_link($series), $series->name);
+               $series_link = sprintf( '<a href="%s">%s</a>', get_term_link( $series ), $series->name );
 
                apply_filters( 'post-series-manager-series-text', $series_text );
 
                if( is_single() )
                {
                   $series_list_HTML = $this->get_series_list_HTML( $series );
-                  $shortcode_HTML .= sprintf($series_block, $series_text, $series_link, $series_list_HTML);
+                  $shortcode_HTML .= sprintf( $series_block, $series_text, $series_link, $series_list_HTML );
               }
               else
               {
-                  $shortcode_HTML .= sprintf($series_block, $series_text, $series_link);
+                  $shortcode_HTML .= sprintf( $series_block, $series_text, $series_link );
               }
           }
       }
@@ -147,8 +147,6 @@ class Post_Series_Manager {
 
         apply_filters( 'post-series-manager-current-text', $current_indicator );
 
-        $series_list_HTML = '<p>' . __('Other posts in this series:') . '</p><ol class="post-series-manager-post-list">';
-
         $args = array(
             'tax_query' => array(
                array(
@@ -163,41 +161,46 @@ class Post_Series_Manager {
 
         $series_posts = get_posts( $args );
 
-        $current_post = get_post( $current_post_ID );
-        $current_index = array_search( $current_post, $series_posts );
-
-        $start_index = $current_index - 2;
-        $end_index = $current_index + 2;
-
-        if( $start_index < 0 )
+        if( count( $series_posts ) > 1 )
         {
-          $start_index = 0;
+          $current_post = get_post( $current_post_ID );
+          $current_index = array_search( $current_post, $series_posts );
+
+          $start_index = $current_index - 2;
+          $end_index = $current_index + 2;
+
+          if( $start_index < 0 )
+          {
+            $start_index = 0;
+          }
+
+          if( $end_index > ( count( $series_posts ) - 1) )
+          {
+            $end_index = count( $series_posts ) - 1;
+          }
+
+          $series_list_HTML = '<p>' . __( 'Other posts in this series:' ) . '</p><ol class="post-series-manager-post-list">';
+
+          for($i = $start_index; $i <= $end_index; $i++ )
+          {
+              $post_title   = get_the_title( $series_posts[$i]->ID );
+              $post_permalink = get_permalink( $series_posts[$i]->ID );
+
+              $list_item = "<li class='post-series-manager-post'>%s</li>";
+
+              if ( $series_posts[$i]->ID === $current_post_ID ) {
+                 $title_markup = $post_title . $current_indicator;
+             } else {
+                 $title_markup = "<a href='$post_permalink'>" . $post_title . "</a>";
+             }
+
+             $series_list_HTML .= sprintf( $list_item, $title_markup );
+          }
+
+         $series_list_HTML .= '</ol>';
+
+         return $series_list_HTML;
         }
-
-        if( $end_index > ( count( $series_posts ) - 1) )
-        {
-          $end_index = count( $series_posts ) - 1;
-        }
-
-        for($i = $start_index; $i <= $end_index; $i++ )
-        {
-            $post_title   = get_the_title( $series_posts[$i]->ID );
-            $post_permalink = get_permalink( $series_posts[$i]->ID );
-
-            $list_item = "<li class='post-series-manager-post'>%s</li>";
-
-            if ( $series_posts[$i]->ID === $current_post_ID ) {
-               $title_markup = $post_title . $current_indicator;
-           } else {
-               $title_markup = "<a href='$post_permalink'>" . $post_title . "</a>";
-           }
-
-           $series_list_HTML .= sprintf($list_item, $title_markup);
-        }
-
-       $series_list_HTML .= '</ol>';
-
-       return $series_list_HTML;
     }
 
     public function post_series_nav_function() {
@@ -207,14 +210,14 @@ class Post_Series_Manager {
         $all_series = get_the_terms( $post->ID, 'post-series' );
 
         if ( $all_series ) {
-            $series_text = __('Continue reading this series:');
+            $series_text = __( 'Continue reading this series:' );
             $series_nav = '<div class="post-series-nav"><p>%s<br /> %s</p></div>';
-            $next = get_next_post_link('%link', '%title', true, NULL, 'post-series' );
+            $next = get_next_post_link( '%link', '%title', true, NULL, 'post-series' );
 
             apply_filters( 'post-series-manager-next-text', $series_text );
 
             if ( $next && is_single() ) {
-               $shortcode_HTML = sprintf($series_nav, $series_text, $next);
+               $shortcode_HTML = sprintf( $series_nav, $series_text, $next );
            }
        }
 
@@ -225,7 +228,7 @@ class Post_Series_Manager {
     // Automatically add shortcodes to post content, before and after the post content
     public function post_series_before( $content ) {
         if( is_single() ) {
-            $series_box = do_shortcode("[post_series_block]");
+            $series_box = do_shortcode( "[post_series_block]" );
             $content = $series_box . $content;
         }
 
@@ -234,7 +237,7 @@ class Post_Series_Manager {
 
     public function post_series_after( $content ) {
         if( is_single() ) {
-            $series_nav = do_shortcode("[post_series_nav]");
+            $series_nav = do_shortcode( "[post_series_nav]" );
             $content = $content . $series_nav;
         }
 
