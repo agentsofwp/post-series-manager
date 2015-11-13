@@ -64,6 +64,11 @@ The filters that are included (subject to change):
 
 == Changelog ==
 
+= 1.1 =
+* Cleaned up some code to match WP standards
+* Post List now supports more than 5 posts
+    * Displays up to 2 posts before and after the current post
+
 = 1.0.2 =
 * Fixed a small, but nasty, bug with a div not getting closed properly.
 * Added some filters.
