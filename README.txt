@@ -2,7 +2,7 @@
 Contributors: adamsoucie, cheffheid
 Tags: post
 Requires at least: 3.8
-Tested up to: 4.4
+Tested up to: 4.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -56,6 +56,18 @@ The filters that are included (subject to change):
     // Filters the "Continue reading this series:" text
     post-series-manager-next-text 
 
+    // Filters the "Other posts in this series:" text
+    post-series-list-intro-text
+
+    // Filters the start "<ol>" tag
+    post-series-list-opening-tags
+
+    // Filters the ending "</ol>" tag
+    post-series-list-ending-tags
+
+Be very aware that if you change the opening ol to ul, you will also want to change the ending ol to match.
+
+
 == Screenshots ==
 
 1. An example of a list of posts in a series, automatically placed at the top of a post.
@@ -64,7 +76,13 @@ The filters that are included (subject to change):
 
 == Changelog ==
 
-= 1.1 =
+= 1.2.0 =
+* Added "start" attribute to ol to follow the count of all posts in the series
+* Cleaned up and updated Dutch translations
+* Fixed existing filters to actually do something
+* Added three more filters, so you can change the list type from ol to ul or change the intro text
+
+= 1.1.0 =
 * Cleaned up some code to match WP standards
 * Post List now supports more than 5 posts
     * Displays up to 2 posts before and after the current post
