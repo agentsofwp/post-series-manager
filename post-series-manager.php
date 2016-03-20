@@ -76,7 +76,6 @@ class Post_Series_Manager {
 			'post-series',
 			'post',
 			array(
-				/* translators: this is the post type name, it may make more sense as singular in your language */
 				'label' => __( 'Post Series', $this->plugin_name ),
 				'rewrite' => array( 'slug' => 'post-series' ),
 				'labels' => array(
@@ -102,7 +101,7 @@ class Post_Series_Manager {
 		load_plugin_textdomain(
 			$this->plugin_name,
 			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 			);
 	}
 
