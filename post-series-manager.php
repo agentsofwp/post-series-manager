@@ -188,7 +188,10 @@ class Post_Series_Manager {
 				$end_index = count( $series_posts ) - 1;
 			}
 
-			$series_list_HTML = '<p>' . __( 'Other posts in this series:', $this->plugin_name ) . '</p><ol class="post-series-manager-post-list">';
+			$series_list_HTML = '<p>' . __( 'Other posts in this series:', $this->plugin_name ) . '</p>';
+			$series_list_HTML .= sprintf( 	'<ol class="post-series-manager-post-list" start="%s">', 
+											$start_index + 1 
+										);
 
 			for($i = $start_index; $i <= $end_index; $i++ )
 			{
