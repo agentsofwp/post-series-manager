@@ -76,29 +76,31 @@ class Post_Series_Manager {
 			'post-series',
 			'post',
 			array(
-			   'label' => __( 'Post Series' ),
-			   'rewrite' => array( 'slug' => 'post-series' ),
-			   'labels' => array( 'name' => __( 'Post Series' ),
-				  'singular_name' => __( 'Post Series' ),
-				  'all_items' => __( 'All Post Series' ),
-				  'edit_item' => __( 'Edit Post Series' ),
-				  'view_item' => __( 'View Post Series' ),
-				  'update_item' => __( 'Update Post Series' ),
-				  'add_new_item' => __( 'Add New Post Series' ), 
-				  'new_item_name' => __( 'New Post Series Name' ),
-				  'search_items' => __( 'Search Post Series' ),
-				  'popular_items' => __( 'Popular Post Series' ),
-				  'separate_items_with_commas' => __( 'Separate post series with commas' ),
-				  'add_or_remove_items' => __( 'Add or remove post series' ),
-				  'choose_from_most_used' => __( 'Choose from most used post series' ),
-				  'not_found' => __( 'No post series found' ) )
-			   )
+				/* translators: this is the post type name, it may make more sense as singular in your language */
+				'label' => __( 'Post Series', $this->plugin_name ),
+				'rewrite' => array( 'slug' => 'post-series' ),
+				'labels' => array(
+					'name' => __( 'Post Series', $this->plugin_name ),
+					'singular_name' => __( 'Post Series', $this->plugin_name ),
+					'all_items' => __( 'All Post Series', $this->plugin_name ),
+					'edit_item' => __( 'Edit Post Series', $this->plugin_name ),
+					'view_item' => __( 'View Post Series', $this->plugin_name ),
+					'update_item' => __( 'Update Post Series', $this->plugin_name ),
+					'add_new_item' => __( 'Add New Post Series', $this->plugin_name ), 
+					'new_item_name' => __( 'New Post Series Name', $this->plugin_name ),
+					'search_items' => __( 'Search Post Series', $this->plugin_name ),
+					'popular_items' => __( 'Popular Post Series', $this->plugin_name ),
+					'separate_items_with_commas' => __( 'Separate post series with commas', $this->plugin_name ),
+					'add_or_remove_items' => __( 'Add or remove post series', $this->plugin_name ),
+					'choose_from_most_used' => __( 'Choose from most used post series', $this->plugin_name ),
+					'not_found' => __( 'No post series found', $this->plugin_name ) )
+				)
 		);
 	}
 
 	public function post_series_i18n() {
 		load_plugin_textdomain(
-			'post-series-manager',
+			$this->plugin_name,
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 			);
@@ -118,24 +120,24 @@ class Post_Series_Manager {
 
 		if ( $all_series ) {
 			foreach( $all_series as $series ) {
-			   $series_text = __( 'This post is part of the series' );
-			   $series_block = '<div class="post-series-manager-block"><p>%s %s</p>%s</div>';
-			   $series_link = sprintf( '<a href="%s">%s</a>', get_term_link( $series ), $series->name );
+				$series_text = __( 'This post is part of the series', $this->plugin_name );
+				$series_block = '<div class="post-series-manager-block"><p>%s %s</p>%s</div>';
+				$series_link = sprintf( '<a href="%s">%s</a>', get_term_link( $series ), $series->name );
 
-			   apply_filters( 'post-series-manager-series-text', $series_text );
+				apply_filters( 'post-series-manager-series-text', $series_text );
 
-			   if( is_single() )
-			   {
-				  $series_list_HTML = $this->get_series_list_HTML( $series );
-				  $shortcode_HTML .= sprintf( $series_block, $series_text, $series_link, $series_list_HTML );
-			  }
-			  else
-			  {
-				  $shortcode_HTML .= sprintf( $series_block, $series_text, $series_link );
-			  }
-		  }
-	  }
-	  return $shortcode_HTML;
+				if( is_single() )
+				{
+					$series_list_HTML = $this->get_series_list_HTML( $series );
+					$shortcode_HTML .= sprintf( $series_block, $series_text, $series_link, $series_list_HTML );
+				}
+				else
+				{
+					$shortcode_HTML .= sprintf( $series_block, $series_text, $series_link );
+				}
+			}
+		}
+		return $shortcode_HTML;
 	}
 
 	/**
@@ -150,18 +152,18 @@ class Post_Series_Manager {
 	{
 		$current_post_ID = get_the_ID();
 
-		$current_indicator = __(' (Current)');
+		$current_indicator = __('(Current)', $this->plugin_name);
 
 		apply_filters( 'post-series-manager-current-text', $current_indicator );
 
 		$args = array(
 			'tax_query' => array(
-			   array(
-				  'taxonomy' => 'post-series',
-				  'field' => 'slug',
-				  'terms' => $series->name
-				  )
-			   ),
+			 	array(
+					'taxonomy' => 'post-series',
+					'field' => 'slug',
+					'terms' => $series->name
+				)
+			),
 			'order' => 'ASC',
 			'posts_per_page' => -1,
 			);
@@ -170,43 +172,43 @@ class Post_Series_Manager {
 
 		if( count( $series_posts ) > 1 )
 		{
-		  $current_post = get_post( $current_post_ID );
-		  $current_index = array_search( $current_post, $series_posts );
+			$current_post = get_post( $current_post_ID );
+			$current_index = array_search( $current_post, $series_posts );
 
-		  $start_index = $current_index - 2;
-		  $end_index = $current_index + 2;
+			$start_index = $current_index - 2;
+			$end_index = $current_index + 2;
 
-		  if( $start_index < 0 )
-		  {
-			$start_index = 0;
-		  }
+			if( $start_index < 0 )
+			{
+				$start_index = 0;
+			}
 
-		  if( $end_index > ( count( $series_posts ) - 1) )
-		  {
-			$end_index = count( $series_posts ) - 1;
-		  }
+			if( $end_index > ( count( $series_posts ) - 1) )
+			{
+				$end_index = count( $series_posts ) - 1;
+			}
 
-		  $series_list_HTML = '<p>' . __( 'Other posts in this series:' ) . '</p><ol class="post-series-manager-post-list">';
+			$series_list_HTML = '<p>' . __( 'Other posts in this series:', $this->plugin_name ) . '</p><ol class="post-series-manager-post-list">';
 
-		  for($i = $start_index; $i <= $end_index; $i++ )
-		  {
-			  $post_title   = get_the_title( $series_posts[$i]->ID );
-			  $post_permalink = get_permalink( $series_posts[$i]->ID );
+			for($i = $start_index; $i <= $end_index; $i++ )
+			{
+				$post_title   = get_the_title( $series_posts[$i]->ID );
+				$post_permalink = get_permalink( $series_posts[$i]->ID );
 
-			  $list_item = "<li class='post-series-manager-post'>%s</li>";
+				$list_item = "<li class='post-series-manager-post'>%s</li>";
 
-			  if ( $series_posts[$i]->ID === $current_post_ID ) {
-				 $title_markup = $post_title . $current_indicator;
-			 } else {
-				 $title_markup = "<a href='$post_permalink'>" . $post_title . "</a>";
-			 }
+				if ( $series_posts[$i]->ID === $current_post_ID ) {
+					$title_markup = $post_title . ' ' . $current_indicator;
+				} else {
+					$title_markup = "<a href='$post_permalink'>" . $post_title . "</a>";
+				}
 
-			 $series_list_HTML .= sprintf( $list_item, $title_markup );
-		  }
+				$series_list_HTML .= sprintf( $list_item, $title_markup );
+			}
 
-		 $series_list_HTML .= '</ol>';
+			$series_list_HTML .= '</ol>';
 
-		 return $series_list_HTML;
+			return $series_list_HTML;
 		}
 	}
 
@@ -217,7 +219,7 @@ class Post_Series_Manager {
 		$all_series = get_the_terms( $post->ID, 'post-series' );
 
 		if ( $all_series ) {
-			$series_text = __( 'Continue reading this series:' );
+			$series_text = __( 'Continue reading this series:', $this->plugin_name );
 			$series_nav = '<div class="post-series-nav"><p>%s<br /> %s</p></div>';
 			$next = get_next_post_link( '%link', '%title', true, NULL, 'post-series' );
 
@@ -225,8 +227,8 @@ class Post_Series_Manager {
 
 			if ( $next && is_single() ) {
 			   $shortcode_HTML = sprintf( $series_nav, $series_text, $next );
-		   }
-	   }
+			}
+		}
 
 	   return $shortcode_HTML;
 
