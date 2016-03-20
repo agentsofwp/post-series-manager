@@ -120,11 +120,10 @@ class Post_Series_Manager {
 
 		if ( $all_series ) {
 			foreach( $all_series as $series ) {
-				$series_text = __( 'This post is part of the series', $this->plugin_name );
 				$series_block = '<div class="post-series-manager-block"><p>%s %s</p>%s</div>';
 				$series_link = sprintf( '<a href="%s">%s</a>', get_term_link( $series ), $series->name );
 
-				apply_filters( 'post-series-manager-series-text', $series_text );
+				$series_text = apply_filters( 'post-series-manager-series-text', __( 'This post is part of the series', $this->plugin_name ) );
 
 				if( is_single() )
 				{
@@ -152,9 +151,7 @@ class Post_Series_Manager {
 	{
 		$current_post_ID = get_the_ID();
 
-		$current_indicator = __('(Current)', $this->plugin_name);
-
-		apply_filters( 'post-series-manager-current-text', $current_indicator );
+		$current_indicator = apply_filters( 'post-series-manager-current-text', __('(Current)', $this->plugin_name) );
 
 		$args = array(
 			'tax_query' => array(
@@ -188,10 +185,11 @@ class Post_Series_Manager {
 				$end_index = count( $series_posts ) - 1;
 			}
 
-			$series_list_HTML = '<p>' . __( 'Other posts in this series:', $this->plugin_name ) . '</p>';
-			$series_list_HTML .= sprintf( 	'<ol class="post-series-manager-post-list" start="%s">', 
-											$start_index + 1 
-										);
+			$list_introduction = apply_filters( 'post-series-list-intro-text', sprintf( '<p>%s</p>', __( 'Other posts in this series:', $this->plugin_name ) ) );
+
+			$list_opening = apply_filters( 'post-series-list-opening-tags', sprintf( '<ol class="post-series-manager-post-list" start="%s">', $start_index + 1 ) );
+
+			$series_list_HTML = $list_introduction . $list_opening;
 
 			for($i = $start_index; $i <= $end_index; $i++ )
 			{
@@ -209,7 +207,9 @@ class Post_Series_Manager {
 				$series_list_HTML .= sprintf( $list_item, $title_markup );
 			}
 
-			$series_list_HTML .= '</ol>';
+			$list_ending = apply_filters( 'post-series-list-ending-tags', '</ol>' );
+
+			$series_list_HTML .= $list_ending;
 
 			return $series_list_HTML;
 		}
@@ -222,11 +222,10 @@ class Post_Series_Manager {
 		$all_series = get_the_terms( $post->ID, 'post-series' );
 
 		if ( $all_series ) {
-			$series_text = __( 'Continue reading this series:', $this->plugin_name );
+			$series_text = apply_filters( 'post-series-manager-next-text', __( 'Continue reading this series:', $this->plugin_name ) );
+			
 			$series_nav = '<div class="post-series-nav"><p>%s<br /> %s</p></div>';
 			$next = get_next_post_link( '%link', '%title', true, NULL, 'post-series' );
-
-			apply_filters( 'post-series-manager-next-text', $series_text );
 
 			if ( $next && is_single() ) {
 			   $shortcode_HTML = sprintf( $series_nav, $series_text, $next );
