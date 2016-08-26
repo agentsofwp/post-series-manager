@@ -1,102 +1,159 @@
 <?php
-
 /**
-*
-* @link              http://cheffism.com
-* @since             1.0.0
-* @package           Post_Series_Manager
-*
-* @wordpress-plugin
-* Plugin Name:       Post Series Manager
-* Plugin URI:        http://cheffism.com/post-series-manager/
-* Description:       This plugin will help you manage and display post series more easily. You'll be able to create/assign series and display other posts in the series.
-* Version:           1.2.0
-* Author:            Jeffrey de Wit, Adam Soucie
-* Author URI:        http://cheffism.com/
-* License:           GPL-2.0+
-* License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
-* Text Domain:       post-series-manager
-* Domain Path:       /languages
-*
-*
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License, version 2, as 
-* published by the Free Software Foundation.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ *
+ * The main plugin file, this is where all the magic happens.
+ *
+ * @link              http://cheffism.com
+ * @since             1.0.0
+ * @package           Post_Series_Manager
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Post Series Manager
+ * Plugin URI:        http://cheffism.com/post-series-manager/
+ * Description:       This plugin will help you manage and display post series more easily. You'll be able to create/assign series and display other posts in the series.
+ * Version:           1.2.0
+ * Author:            Jeffrey de Wit, Adam Soucie
+ * Author URI:        http://cheffism.com/
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       post-series-manager
+ * Domain Path:       /languages
+ *
+ *
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+
+/**
+ * Main plugin class.
+ *
+ * This class defines all code for running the plugin.
+ *
+ * @since      1.0.0
+ * @package    Post_Series_Manager
+ * @author     Jeffrey de Wit <jeffrey.dewit@gmail.com>
+ */
 class Post_Series_Manager {
 
+	/**
+	 * The unique identifier of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 */
 	protected $plugin_name;
+
+	/**
+	 * The current version of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $plugin_version    The current version of the plugin.
+	 */
 	protected $plugin_version;
 
+	/**
+	 * Define the core functionality of the plugin.
+	 *
+	 * Set the plugin name and the plugin version that can be used throughout the plugin.
+	 * Load the dependencies, define the locale, and set the hooks for the admin area and
+	 * the public-facing side of the site.
+	 *
+	 * @since    1.0.0
+	 */
 	function __construct() {
-		$this->plugin_name = "post-series-manager";
-		$this->plugin_version = "1.1.0";
+		$this->plugin_name = 'post-series-manager';
+		$this->plugin_version = '1.1.0';
 
-		register_activation_hook( __FILE__, array( &$this, 'post_series_manager_activate' ) );
-		register_deactivation_hook( __FILE__, array( &$this, 'post_series_manager_deactivate' ) );
+		register_activation_hook( __FILE__, array( $this, 'post_series_manager_activate' ) );
+		register_deactivation_hook( __FILE__, array( $this, 'post_series_manager_deactivate' ) );
 
-		add_action( 'init', array( &$this, 'post_series_taxonomy' ) );
-		add_action( 'plugins_loaded', array( &$this, 'post_series_i18n' ) );
-		add_action( 'init', array( &$this, 'post_series_shortcodes' ) );
-		add_filter( 'the_content', array( &$this, 'post_series_before' ) );
-		add_filter( 'the_content', array( &$this, 'post_series_after' ) );
-		add_action( 'pre_get_posts', array( &$this, 'post_series_sort_order' ) );
+		add_action( 'init', array( $this, 'post_series_taxonomy' ) );
+		add_action( 'plugins_loaded', array( $this, 'post_series_i18n' ) );
+		add_action( 'init', array( $this, 'post_series_shortcodes' ) );
+		add_filter( 'the_content', array( $this, 'post_series_before' ) );
+		add_filter( 'the_content', array( $this, 'post_series_after' ) );
+		add_action( 'pre_get_posts', array( $this, 'post_series_sort_order' ) );
 	}
 
-	// register taxonomy and force rewrite flush when plugin is activated
-	function post_series_manager_activate() {
+	/**
+	 * Register taxonomy and force rewrite flush when plugin is activated.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function post_series_manager_activate() {
 		$this->post_series_taxonomy();
 		flush_rewrite_rules();
 	}
 
-	// force rewrite flush when plugin is deactivated
-	function post_series_manager_deactivate() {
+	/**
+	 * Force rewrite flush when plugin is deactivated.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function post_series_manager_deactivate() {
 		flush_rewrite_rules();
 	}
 
-
+	/**
+	 * Registers the post series taxonomy.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
 	public function post_series_taxonomy() {
 		register_taxonomy(
 			'post-series',
 			'post',
 			array(
-				'label' => __( 'Post Series', $this->plugin_name ),
+				'label' => __( 'Post Series', 'post-series-manager' ),
 				'rewrite' => array( 'slug' => 'post-series' ),
 				'labels' => array(
-					'name' => __( 'Post Series', $this->plugin_name ),
-					'singular_name' => __( 'Post Series', $this->plugin_name ),
-					'all_items' => __( 'All Post Series', $this->plugin_name ),
-					'edit_item' => __( 'Edit Post Series', $this->plugin_name ),
-					'view_item' => __( 'View Post Series', $this->plugin_name ),
-					'update_item' => __( 'Update Post Series', $this->plugin_name ),
-					'add_new_item' => __( 'Add New Post Series', $this->plugin_name ), 
-					'new_item_name' => __( 'New Post Series Name', $this->plugin_name ),
-					'search_items' => __( 'Search Post Series', $this->plugin_name ),
-					'popular_items' => __( 'Popular Post Series', $this->plugin_name ),
-					'separate_items_with_commas' => __( 'Separate post series with commas', $this->plugin_name ),
-					'add_or_remove_items' => __( 'Add or remove post series', $this->plugin_name ),
-					'choose_from_most_used' => __( 'Choose from most used post series', $this->plugin_name ),
-					'not_found' => __( 'No post series found', $this->plugin_name ) )
+					'name' => __( 'Post Series', 'post-series-manager' ),
+					'singular_name' => __( 'Post Series', 'post-series-manager' ),
+					'all_items' => __( 'All Post Series', 'post-series-manager' ),
+					'edit_item' => __( 'Edit Post Series', 'post-series-manager' ),
+					'view_item' => __( 'View Post Series', 'post-series-manager' ),
+					'update_item' => __( 'Update Post Series', 'post-series-manager' ),
+					'add_new_item' => __( 'Add New Post Series', 'post-series-manager' ),
+					'new_item_name' => __( 'New Post Series Name', 'post-series-manager' ),
+					'search_items' => __( 'Search Post Series', 'post-series-manager' ),
+					'popular_items' => __( 'Popular Post Series', 'post-series-manager' ),
+					'separate_items_with_commas' => __( 'Separate post series with commas', 'post-series-manager' ),
+					'add_or_remove_items' => __( 'Add or remove post series', 'post-series-manager' ),
+					'choose_from_most_used' => __( 'Choose from most used post series', 'post-series-manager' ),
+					'not_found' => __( 'No post series found', 'post-series-manager' ),
+					)
 				)
 		);
 	}
 
+	/**
+	 * Registers the post series i18n.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
 	public function post_series_i18n() {
 		load_plugin_textdomain(
 			$this->plugin_name,
@@ -105,12 +162,23 @@ class Post_Series_Manager {
 			);
 	}
 
+	/**
+	 * Registers the post series shortcodes.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
 	public function post_series_shortcodes() {
 		add_shortcode( 'post_series_block', array( &$this, 'post_series_block_function' ) );
 		add_shortcode( 'post_series_nav', array( &$this, 'post_series_nav_function' ) );
 	}
 
-	// post_series_manager shortcode output
+	/**
+	 * The post_series_block shortcode output.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
 	public function post_series_block_function() {
 		global $post;
 
@@ -139,13 +207,13 @@ class Post_Series_Manager {
 	}
 
 	/**
-	* Generates the markup for the Post Series list.
-	*
-	* @since  1.0.0
-	* 
-	* @param  object $series The post series to work through
-	* @return string $series_list_HTML Completed HTML string of all the series lists
-	*/
+	 * Generates the markup for the Post Series list.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param  object $series The post series to work through.
+	 * @return string $series_list_HTML Completed HTML string of all the series lists
+	 */
 	public function get_series_list_HTML( $series )
 	{
 		$current_post_ID = get_the_ID();
@@ -214,6 +282,12 @@ class Post_Series_Manager {
 		}
 	}
 
+	/**
+	 * Post series navigation function. Generates "Continue reading" link.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
 	public function post_series_nav_function() {
 		global $post;
 
@@ -222,7 +296,7 @@ class Post_Series_Manager {
 
 		if ( $all_series ) {
 			$series_text = apply_filters( 'post-series-manager-next-text', __( 'Continue reading this series:', $this->plugin_name ) );
-			
+
 			$series_nav = '<div class="post-series-nav"><p>%s<br /> %s</p></div>';
 			$next = get_next_post_link( '%link', '%title', true, NULL, 'post-series' );
 
@@ -235,7 +309,13 @@ class Post_Series_Manager {
 
 	}
 
-	// Automatically add shortcodes to post content, before and after the post content
+	/**
+	 * Automatically add shortcodes to post content, before the post content.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @param  string $content The post content.
+	 */
 	public function post_series_before( $content ) {
 		if( is_single() ) {
 			$series_box = do_shortcode( "[post_series_block]" );
@@ -245,6 +325,13 @@ class Post_Series_Manager {
 		return $content;
 	}
 
+	/**
+	 * Automatically add shortcodes to post content, after the post content.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @param  string $content The post content.
+	 */
 	public function post_series_after( $content ) {
 		if( is_single() ) {
 			$series_nav = do_shortcode( "[post_series_nav]" );
@@ -254,7 +341,13 @@ class Post_Series_Manager {
 		return $content;
 	}
 
-	// Reverse sort order, since part 1 is generally older than part X
+	/**
+	 * Reverse sort order, since part 1 is generally older than part X.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @param  object $query WP_Query object.
+	 */
 	public function post_series_sort_order( $query ) {
 		if( ( $query->is_main_query() ) && ( is_tax('post-series') ) ) {
 			$query->set( 'order', 'ASC' );
