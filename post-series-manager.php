@@ -81,7 +81,7 @@ class Post_Series_Manager {
 	 */
 	function __construct() {
 		$this->plugin_name = 'post-series-manager';
-		$this->plugin_version = '1.1.0';
+		$this->plugin_version = '1.2.0';
 
 		register_activation_hook( __FILE__, array( $this, 'post_series_manager_activate' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'post_series_manager_deactivate' ) );
@@ -232,7 +232,7 @@ class Post_Series_Manager {
 
 		if ( $series_posts->post_count > 1 ) {
 			$current_post = get_post( $current_post_id );
-			$current_index = array_search( $current_post, $series_posts, true );
+			$current_index = array_search( $current_post, $series_posts->posts, true );
 
 			$start_index = $current_index - 2;
 			$end_index = $current_index + 2;
@@ -252,12 +252,12 @@ class Post_Series_Manager {
 			$series_list_html = $list_introduction . $list_opening;
 
 			for ( $i = $start_index; $i <= $end_index; $i++ ) {
-				$post_title   = get_the_title( $series_posts[ $i ]->ID );
-				$post_permalink = get_permalink( $series_posts[ $i ]->ID );
+				$post_title   = get_the_title( $series_posts->posts[ $i ]->ID );
+				$post_permalink = get_permalink( $series_posts->posts[ $i ]->ID );
 
 				$list_item = "<li class='post-series-manager-post'>%s</li>";
 
-				if ( $series_posts[ $i ]->ID === $current_post_id ) {
+				if ( $series_posts->posts[ $i ]->ID === $current_post_id ) {
 					$title_markup = $post_title . ' ' . $current_indicator;
 				} else {
 					$title_markup = "<a href='$post_permalink'>" . $post_title . '</a>';
