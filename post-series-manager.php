@@ -98,9 +98,9 @@ class Post_Series_Manager {
 	 * Register taxonomy and force rewrite flush when plugin is activated.
 	 *
 	 * @since    1.0.0
-	 * @access   private
+	 * @access   public
 	 */
-	private function post_series_manager_activate() {
+	public function post_series_manager_activate() {
 		$this->post_series_taxonomy();
 		flush_rewrite_rules();
 	}
@@ -109,9 +109,9 @@ class Post_Series_Manager {
 	 * Force rewrite flush when plugin is deactivated.
 	 *
 	 * @since    1.0.0
-	 * @access   private
+	 * @access   public
 	 */
-	private function post_series_manager_deactivate() {
+	public function post_series_manager_deactivate() {
 		flush_rewrite_rules();
 	}
 
