@@ -144,6 +144,7 @@ class Post_Series_Manager {
 					'choose_from_most_used' => __( 'Choose from most used post series', 'post-series-manager' ),
 					'not_found' => __( 'No post series found', 'post-series-manager' ),
 				),
+				'show_in_rest' => true,
 			)
 		);
 	}
