@@ -2,8 +2,8 @@
 Contributors: adamsoucie, cheffheid
 Tags: post
 Requires at least: 3.8
-Tested up to: 4.5
-Stable tag: trunk
+Tested up to: 4.9.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,7 +54,7 @@ The filters that are included (subject to change):
     post-series-manager-current-text
 
     // Filters the "Continue reading this series:" text
-    post-series-manager-next-text 
+    post-series-manager-next-text
 
     // Filters the "Other posts in this series:" text
     post-series-list-intro-text
@@ -75,6 +75,10 @@ Be very aware that if you change the opening ol to ul, you will also want to cha
 3. Adding a post to a series is as simple as adding a tag to it.
 
 == Changelog ==
+
+= 1.2.1 =
+* Fixed unexpected output during activation error.
+* Enabled `show_in_rest` for REST API and Gutenberg support.
 
 = 1.2.0 =
 * Added "start" attribute to ol to follow the count of all posts in the series
