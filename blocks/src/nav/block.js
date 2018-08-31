@@ -6,6 +6,8 @@
  */
 
 import listIcon from './icon';
+const { Fragment } = wp.element;
+const { RawHTML } = wp.element
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
@@ -41,9 +43,15 @@ registerBlockType('psm/block-nav', {
 			setAttributes
 		} = props;
 
-		return [
-			<div className={className}>Testing 1 2 3</div>
-		];
+		const test = my_script_vars.nextURL;
+
+		return [<div className="post-series-nav">
+        <p>
+          Continue reading this series:
+          <br />
+          <RawHTML>{test}</RawHTML>
+        </p>
+      </div>];
 	},
 
 	// Determines what is displayed on the front-end.

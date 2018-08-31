@@ -182,6 +182,15 @@ class Post_Series_Manager {
 			// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ), // Version: filemtime — Gets file modification time.
 			true // Enqueue the script in the footer.
 		);
+
+		// Localize our scripts.
+		global $post;
+
+		wp_localize_script('gutenberg-blocks-scripts', 'my_script_vars', array(
+				'postID' => $post->ID,
+				'nextURL' => get_next_post_link( '%link', '%title', true, null, 'post-series' ),
+            )
+        );
 	}
 
 	/**
