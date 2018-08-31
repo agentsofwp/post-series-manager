@@ -10,3 +10,4 @@
  */
 
 import "./nav/block.js";
+import "./list/block.js";

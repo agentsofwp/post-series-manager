@@ -214,6 +214,10 @@ class Post_Series_Manager {
 		register_block_type( 'psm/block-nav', [
 			'render_callback' => array( &$this, 'post_series_nav_function' ),
 		] );
+
+		register_block_type( 'psm/block-list', [
+			'render_callback' => array( &$this, 'post_series_block_function' ),
+		] );
 	}
 
 	/**
