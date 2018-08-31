@@ -92,6 +92,11 @@ class Post_Series_Manager {
 		add_filter( 'the_content', array( $this, 'post_series_before' ) );
 		add_filter( 'the_content', array( $this, 'post_series_after' ) );
 		add_action( 'pre_get_posts', array( $this, 'post_series_sort_order' ) );
+
+		if( function_exists( 'register_block_type' ) ) {
+			add_action( 'enqueue_block_editor_assets', array( $this, 'gutenberg_editor_assets' ) );
+			add_action( 'init', array( $this, 'register_blocks' ) );
+		}
 	}
 
 	/**
@@ -164,6 +169,22 @@ class Post_Series_Manager {
 	}
 
 	/**
+	 * Enqueues the scripts needed for our Gutenberg blocks.
+	 *
+	 * @return void
+	 * @author Adam Soucie
+	 */
+	public function gutenberg_editor_assets() {
+		wp_enqueue_script(
+			'gutenberg-blocks-scripts', // Handle.
+			plugins_url( '/blocks/dist/blocks.build.js', __FILE__ ), // Block.build.js: We register the block here. Built with Webpack.
+			array( 'wp-blocks', 'wp-i18n', 'wp-element' ), // Dependencies, defined above.
+			// filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ), // Version: filemtime — Gets file modification time.
+			true // Enqueue the script in the footer.
+		);
+	}
+
+	/**
 	 * Registers the post series shortcodes.
 	 *
 	 * @since    1.0.0
@@ -172,6 +193,18 @@ class Post_Series_Manager {
 	public function post_series_shortcodes() {
 		add_shortcode( 'post_series_block', array( &$this, 'post_series_block_function' ) );
 		add_shortcode( 'post_series_nav', array( &$this, 'post_series_nav_function' ) );
+	}
+
+	/**
+	 * Registers our dynamic Gutenberg blocks.
+	 *
+	 * @return void
+	 * @author Adam Soucie.
+	 */
+	public function register_blocks() {
+		register_block_type( 'psm/block-nav', [
+			'render_callback' => array( &$this, 'post_series_nav_function' ),
+		] );
 	}
 
 	/**
