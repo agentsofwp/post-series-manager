@@ -6,20 +6,27 @@
  */
 
 import listIcon from './icon';
+import WPAPI from 'wpapi';
+import Inspector from "./inspector";
 
-const { RawHTML } = wp.element // Allows use of raw HTML.
+const { RawHTML } = wp.element; // Allows use of raw HTML.
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
 
 const { withSelect } = wp.data;
 
-function getSeriesListHTML() {
-	let HTML = '<div>test</div>';
-	return HTML;
-}
+async function getSeriesListHTML( termID ) {
+	const postPromise = fetch("http://gutenberg.test/wp-json/wp/v2/posts?post-series=3");
 
-function getPostsFromAPI() {
 
+	const test = await postPromise.then( data => data.json() ).then( data => {
+		let HTML = '';
+		data.map( post => HTML = post.title.rendered + HTML );
+
+		return HTML;
+	} );
+
+	console.log(test);
 }
 
 /**
@@ -43,6 +50,9 @@ registerBlockType('psm/block-list', {
 	category: 'widgets', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 	keywords: [__('Post Series Manager'), __('Post Series')],
 	attributes: {
+		termID: {
+			type: 'string'
+		},
 	},
 
 	// Determines what is displayed in the editor.
@@ -50,12 +60,16 @@ registerBlockType('psm/block-list', {
 	edit: function (props) {
 		const {
 			className,
+			attributes,
 			setAttributes
 		} = props;
 
-		const test = my_script_vars.nextURL;
-
-		return [<div class="post-series-manager-block"><RawHTML>{ getSeriesListHTML() }</RawHTML></div>];
+		return [
+			<Inspector { ...{ setAttributes, ...props } } />,
+			<div class="post-series-manager-block">
+				<RawHTML>{ getSeriesListHTML( props.attributes.termID ) }</RawHTML>
+			</div>
+		];
 	},
 
 	// Determines what is displayed on the front-end.

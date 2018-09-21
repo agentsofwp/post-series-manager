@@ -93,7 +93,7 @@ class Post_Series_Manager {
 		add_filter( 'the_content', array( $this, 'post_series_after' ) );
 		add_action( 'pre_get_posts', array( $this, 'post_series_sort_order' ) );
 
-		if( function_exists( 'register_block_type' ) ) {
+		if ( function_exists( 'register_block_type' ) ) {
 			add_action( 'enqueue_block_editor_assets', array( $this, 'gutenberg_editor_assets' ) );
 			add_action( 'init', array( $this, 'register_blocks' ) );
 		}
@@ -171,7 +171,6 @@ class Post_Series_Manager {
 	/**
 	 * Enqueues the scripts needed for our Gutenberg blocks.
 	 *
-	 * @return void
 	 * @author Adam Soucie
 	 */
 	public function gutenberg_editor_assets() {
@@ -187,7 +186,8 @@ class Post_Series_Manager {
 		global $post;
 
 		wp_localize_script('gutenberg-blocks-scripts', 'my_script_vars', array(
-				'postID' => $post->ID,
+				'postID'  => $post->ID,
+				'taxID'   => wp_get_post_terms( $post->ID, 'post-series' ),
 				'nextURL' => get_next_post_link( '%link', '%title', true, null, 'post-series' ),
             )
         );
@@ -243,7 +243,7 @@ class Post_Series_Manager {
 					$series_list_html = $this->get_series_list_html( $series );
 					$shortcode_html .= sprintf( $series_block, $series_text, $series_link, $series_list_html );
 				} else {
-					$shortcode_html .= sprintf( $series_block, $series_text, $series_link );
+					$shortcode_html .= sprintf( $series_block, $series_text, $series_link, '' );
 				}
 			}
 		}
