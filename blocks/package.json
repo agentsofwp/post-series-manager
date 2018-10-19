@@ -7,7 +7,7 @@
     "build": "cgb-scripts build",
     "eject": "cgb-scripts eject"
   },
-  "dependencies": {
+  "devDependencies": {
     "cgb-scripts": "1.9.8"
   }
 }
